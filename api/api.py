@@ -15,16 +15,9 @@ def home():
 
 app.run()
 
-def get_books_json(url: str = "https://www.googleapis.com/books/v1/volumes?q=war") -> dict:
-    
-    user_url = url
-    r = requests.get(user_url)
-    
-    return r.json()
-    
 
 
-#Pobierz json i przetwórz go do odpowiedniej postaci:
+#Pobierz json i przetwórz go do odpowiedniej postaci: 
 # Potrzebe z jsona do zadan sa: id, volumeInfo: authors (cala lista), volumeInfo: publishedDate
 # do wyswitlania potrzebne dodatkowa:  volumeInfo: title, volumeInfo: categories, volumeInfo: averageRating, volumeInfo: raitingsCount, imageLinks: thumbnail
 # Stworz baze SQLite z tymi ksiazkami (startowy data set moze byc pierwszymi 20 elementaki jsona)
