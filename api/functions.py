@@ -2,7 +2,7 @@ import requests
 import pandas as pd
 
 
-def get_books_json(url: str = "https://www.googleapis.com/books/v1/volumes?q=war") -> dict:
+def get_books_json(url: str) -> dict:
     """
     Use GET method for given url to retrive json file.
     
@@ -24,7 +24,7 @@ def get_books_json(url: str = "https://www.googleapis.com/books/v1/volumes?q=war
     
     return r.json()
 
-def get_book_information(url: str = "https://www.googleapis.com/books/v1/volumes?q=war"):
+def get_book_information(url: str):
     """
     TO DO description 
     
@@ -44,11 +44,13 @@ def get_book_information(url: str = "https://www.googleapis.com/books/v1/volumes
     for item in items_list:
         flatten_df = pd.json_normalize(item, sep='_')
         flatten_dict = flatten_df.to_dict(orient='records')[0]  
-        book_params_dict = {key: flatten_dict.get(key) for key in list_of_wanted_params}
+        book_params_dict = {key.rsplit("_", 1)[-1]: flatten_dict.get(key) for key in list_of_wanted_params}
         parameters_list.append(book_params_dict)
         
     return parameters_list
         
+
+
 
 
        
