@@ -63,8 +63,8 @@ def get_book_list():
     if 'author' in flask.request.args:
         query_parameters = flask.request.args.to_dict(flat=False)
         authors = query_parameters.get('author')
-        
-        
+        authors = [s.replace('"', '') for s in authors]
+            
         books_with_auth_filter = []
         for author in authors:
             cursor = db.books.find({ "authors": author })
@@ -77,6 +77,8 @@ def get_book_list():
         
     return flask.jsonify(books_list)
 
+    
+    
 
 
 
