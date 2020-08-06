@@ -71,16 +71,21 @@ def get_book_list():
             for book in cursor:
                 book.pop('_id')
                 books_with_auth_filter.append(book)
-        
-        
+         
         return flask.jsonify(books_with_auth_filter)
         
     return flask.jsonify(books_list)
 
-    
-    
 
-
+@app.route('/books/<string:book_id>', methods=['GET'])   
+def show_book_by_id(book_id):
+    books_bonson = db.books.find({"id": book_id})
+    books_list = []
+    for book in books_bonson:
+        book.pop('_id')
+        books_list.append(book)
+    
+    return flask.jsonify(books_list)
 
 app.run()
 
