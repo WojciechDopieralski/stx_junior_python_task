@@ -62,10 +62,18 @@ def get_book_list():
     
     if 'author' in flask.request.args:
         query_parameters = flask.request.args.to_dict(flat=False)
-        author = query_parameters.get('author')
-        #Z tym mozna dalej dzialac by sprawdzic czy dany autor cos pisal ;) 
+        authors = query_parameters.get('author')
         
-        return 
+        
+        books_with_auth_filter = []
+        for author in authors:
+            cursor = db.books.find({ "authors": author })
+            for book in cursor:
+                book.pop('_id')
+                books_with_auth_filter.append(book)
+        
+        
+        return flask.jsonify(books_with_auth_filter)
         
     return flask.jsonify(books_list)
 
@@ -78,5 +86,17 @@ app.run()
 api = Api(app)
 
 
+authors = ["John Ronald Reuel Tolkien", "Corey Olsen"]
+books_with_auth_filter = []
+for author in authors:
+    cursor = db.books.find({ "authors": author })
+    for book in cursor:
+        book.pop('_id')
+        books_with_auth_filter.append(book)
 
 
+                    
+
+
+#?author="John Ronald Reuel Tolkien"&author="Corey Olsen"
+                           
