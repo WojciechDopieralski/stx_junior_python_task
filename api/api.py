@@ -1,8 +1,7 @@
 import flask
 from dbconn import db
 import datetime
-from flask_rest_jsonapi import Api
-
+from functions import get_book_information
 
 
 app = flask.Flask(__name__)
@@ -87,23 +86,29 @@ def show_book_by_id(book_id):
     
     return flask.jsonify(books_list)
 
+
+@app.route('/db', methods=['POST'])
+def post_db():
+    
+    post_json = flask.request.json
+    q_tag_keys = list(post_json.keys())
+        
+    if all(element == 'q' for element in q_tag_keys):
+        new_books_json = get_book_information("https://www.googleapis.com/books/v1/volumes", post_json)
+    
+        for books in new_books_json:
+            db.books.update({"_id": books['_id']} , books, upsert = True)
+        resp = flask.jsonify('books added and updated successfully')
+        resp.status_code = 200
+    else: 
+        resp = flask.jsonify('json should contain 1 key named "q" and some value (for example: {"q" : "war"})')
+        
+    
+    return resp
+    
+    
+
+
+
 app.run()
 
-
-api = Api(app)
-
-
-authors = ["John Ronald Reuel Tolkien", "Corey Olsen"]
-books_with_auth_filter = []
-for author in authors:
-    cursor = db.books.find({ "authors": author })
-    for book in cursor:
-        book.pop('_id')
-        books_with_auth_filter.append(book)
-
-
-                    
-
-
-#?author="John Ronald Reuel Tolkien"&author="Corey Olsen"
-                           
