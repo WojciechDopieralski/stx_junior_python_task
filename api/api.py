@@ -1,6 +1,6 @@
 import flask
-from dbconn import db
-from functions import get_book_information, create_output_json
+from .dbconn import db
+from .functions import get_book_information, create_output_json
 
 app = flask.Flask(__name__)
 
