@@ -6,7 +6,7 @@ app = flask.Flask(__name__)
 
 @app.route('/', methods=['GET'])
 def home():  
-    return """<center><h1>\ Welcome to small book API. You can do following thigs here: </h1><br/>
+    return """<center><h1> Welcome to small book API. You can do following things here: </h1><br/>
 <h2>- /books => get all books in DB. You can filter by ?published_date (in fact published year) and sort by it. You can also filter by authors. <br/>
 - /books/bookid => get information about book with given id. <br/>
 - /db => Post method. You need to send JSON with key "q", and some value (for example "war") to add new books to DB or update existing ones. </h2><br/> 
@@ -69,5 +69,6 @@ def post_db():
     
     return resp
     
-app.run()
+if __name__ == '__main__':
+    app.run()
 
