@@ -1,7 +1,7 @@
 import requests
 import pandas as pd
 import datetime
-
+import pymongo
 
 def get_books_json(url: str, headers: dict = None) -> dict:
     """
@@ -11,30 +11,37 @@ def get_books_json(url: str, headers: dict = None) -> dict:
     ----------
     url: str
         link to resources (default: link to volumes with q=war, target of recrutment task)
+    headers: dict
+        dict with params for requests.get method. It should contain key and value matched for given url.  
     
     Returns
     -------
-    dict
+    dict:
         json file from given url.
         
-    """
-    
-    #TO DO: ZABEZPIECZ DOBRA WIADOMOSCIA, GDY NIE BEDZIE ZWROTU 200 - WYSWIETL USEROWI NR BLEDU. 
+    """ 
     user_url = url
     r = requests.get(user_url, headers)
+    if r.status_code != 200:
+        return "wrong status code: {}".format(r.status_code)
     
     return r.json()
 
-def get_book_information(url: str, headers: dict = None):
+def get_book_information(url: str, headers: dict = None) -> list:
     """
-    TO DO description 
+    Create list that contains dicts of cleaned data from google book API. 
     
     Parameters
     ----------
-    
+    url: str
+        link to resources (default: link to volumes with q=war, target of recrutment task)
+    headers: dict
+        dict with params for requests.get method. It should contain key and value matched for given url.
+        
     Returns
     -------
-    None.
+    books_list: list
+        List containing dict with chosen values.     
     """
     
     url_json = get_books_json(url, headers)
@@ -61,5 +68,23 @@ def get_book_information(url: str, headers: dict = None):
     return parameters_list
         
 
-       
+def create_output_json(cursor: pymongo.cursor.Cursor) -> list:
+    """
+    Create list that contains result of pymongo query
+    
+    Parameters
+    ----------
+    cursor: pymongo.cursor.Cursor
+        cursor with query created by pymongo
+        
+    Returns
+    -------
+    books_list: list
+        List containing dict with values after query to DB.  
+    """
+    books_list = []
+    for book in cursor:
+        [book.pop(param) for param in ['_id', "publishedYear"]]
+        books_list.append(book)
+    return books_list
 
