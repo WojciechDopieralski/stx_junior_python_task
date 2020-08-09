@@ -1,6 +1,7 @@
 import flask
 from .dbconn import db
-from .functions import get_book_information, create_output_json
+from .functions import get_books_information, create_output_json
+
 
 app = flask.Flask(__name__)
 
@@ -57,7 +58,7 @@ def post_db():
     q_tag_keys = list(post_json.keys())
         
     if all(element == 'q' for element in q_tag_keys):
-        new_books_json = get_book_information("https://www.googleapis.com/books/v1/volumes", post_json)
+        new_books_json = get_books_information("https://www.googleapis.com/books/v1/volumes", post_json)
     
         for books in new_books_json:
             db.books.update({"_id": books['_id']}, books, upsert = True)

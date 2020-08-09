@@ -27,7 +27,7 @@ def get_books_json(url: str, headers: dict = None) -> dict:
     
     return r.json()
 
-def get_book_information(url: str, headers: dict = None) -> list:
+def get_books_information(url: str, headers: dict = None) -> list:
     """
     Create list that contains dicts of cleaned data from google book API. 
     
