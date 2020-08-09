@@ -11,3 +11,5 @@ client = pymongo.MongoClient(uri)
 
 db = client.stxtest
 
+with open('pass_example.p', 'wb') as f:
+    pickle.dump("example_pass", f)
